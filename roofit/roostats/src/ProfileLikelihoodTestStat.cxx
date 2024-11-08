@@ -88,8 +88,9 @@ double RooStats::ProfileLikelihoodTestStat::EvaluateProfileLikelihood(int type, 
           RooStats::RemoveConstantParameters(&*allParams);
 
           // need to call constrain for RooSimultaneous until stripDisconnected problem fixed
-          fNll = std::unique_ptr<RooAbsReal>{fPdf->createNLL(data, RooFit::CloneData(false),RooFit::Constrain(*allParams),
-                                 RooFit::GlobalObservables(fGlobalObs), RooFit::ConditionalObservables(fConditionalObs), RooFit::Offset(fLOffset))};
+          fNll = std::unique_ptr<RooAbsReal>{fPdf->createNLL(
+             data, RooFit::CloneData(false), RooFit::Constrain(*allParams), RooFit::GlobalObservables(fGlobalObs),
+             RooFit::ConditionalObservables(fConditionalObs), RooFit::Offset("bin"))};
 
           if (fPrintLevel > 0 && fLOffset) cout << "ProfileLikelihoodTestStat::Evaluate - Use Offset in creating NLL " << endl ;
 

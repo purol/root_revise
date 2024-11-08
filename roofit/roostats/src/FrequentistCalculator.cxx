@@ -96,8 +96,7 @@ int FrequentistCalculator::PreNullHook(RooArgSet *parameterPoint, double obsTest
       auto& config = GetGlobalRooStatsConfig();
       std::unique_ptr<RooAbsReal> nll{fNullModel->GetPdf()->createNLL(*const_cast<RooAbsData*>(fData), RooFit::CloneData(false), RooFit::Constrain(*allParams),
                                                         RooFit::GlobalObservables(globalObs),
-                                                        RooFit::ConditionalObservables(conditionalObs),
-                                                        RooFit::Offset(config.useLikelihoodOffset))};
+                                                        RooFit::ConditionalObservables(conditionalObs), RooFit::Offset("bin"))};
       std::unique_ptr<RooAbsArg> profileOwner{nll->createProfile(allButNuisance)};
       auto profile = dynamic_cast<RooProfileLL*>(profileOwner.get());
       // set minimier options
@@ -202,8 +201,7 @@ int FrequentistCalculator::PreAltHook(RooArgSet *parameterPoint, double obsTestS
       const auto& config = GetGlobalRooStatsConfig();
       std::unique_ptr<RooAbsReal> nll{fAltModel->GetPdf()->createNLL(*const_cast<RooAbsData*>(fData), RooFit::CloneData(false), RooFit::Constrain(*allParams),
                                                        RooFit::GlobalObservables(globalObs),
-                                                       RooFit::ConditionalObservables(conditionalObs),
-                                                       RooFit::Offset(config.useLikelihoodOffset))};
+                                                       RooFit::ConditionalObservables(conditionalObs), RooFit::Offset("bin"))};
 
       std::unique_ptr<RooAbsReal> profileOwner{nll->createProfile(allButNuisance)};
       auto profile = dynamic_cast<RooProfileLL*>(profileOwner.get());
