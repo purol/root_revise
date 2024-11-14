@@ -472,6 +472,14 @@ RooArgList HistoToWorkspaceFactoryFast::createObservables(const TH1 *hist, RooWo
                 RooRealVar *mu = new RooRealVar("mu", "mu", 1.0, -100.0, 100.0);
                 proto.import(*mu);
              }
+             if (proto.obj("mu_MXs2") == nullptr) {
+                RooRealVar *mu_MXs2 = new RooRealVar("mu_MXs2", "mu_MXs2", 1.0, -100.0, 100.0);
+                proto.import(*mu_MXs2);
+             }
+             if (proto.obj("mu_MXs3") == nullptr) {
+                RooRealVar *mu_MXs3 = new RooRealVar("mu_MXs3", "mu_MXs3", 1.0, -100.0, 100.0);
+                proto.import(*mu_MXs3);
+             }
           }
         }
 
