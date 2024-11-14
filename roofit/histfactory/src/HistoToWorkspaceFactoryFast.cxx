@@ -468,7 +468,7 @@ RooArgList HistoToWorkspaceFactoryFast::createObservables(const TH1 *hist, RooWo
           } else {
              cxcoutI(HistFactory) << "exceptional making normFactor: " << norm.GetName() << endl;
              RooRealVar *mu = new RooRealVar("mu", "mu", 1.0, -100.0, 100.0);
-             proto.import(*mu);
+             proto.import(mu);
           }
         }
 
@@ -493,7 +493,7 @@ RooArgList HistoToWorkspaceFactoryFast::createObservables(const TH1 *hist, RooWo
                 "mu_MXs1_alt",
                 "(@2*(0.0000048514+0.0000085024+0.0000156653)-@0*0.0000085024-@1*0.0000156653)/0.0000048514",
                 RooArgList(*mu_MXs2, *mu_MXs3, *mu_var));
-             proto.import(*mu1);
+             proto.import(mu1);
           }
           auto arg = proto.arg("mu_MXs1_alt");
           assert(arg);
