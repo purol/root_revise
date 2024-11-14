@@ -461,9 +461,15 @@ RooArgList HistoToWorkspaceFactoryFast::createObservables(const TH1 *hist, RooWo
         range << "[" << norm.GetVal() << "," << norm.GetLow() << "," << norm.GetHigh() << "]";
 
         if( proto.obj(varname) == nullptr) {
-          cxcoutI(HistFactory) << "making normFactor: " << norm.GetName() << endl;
-          // remove "doRatio" and name can be changed when ws gets imported to the combined model.
-          proto.factory(varname + range.str());
+          if (name != "mu") {
+             cxcoutI(HistFactory) << "making normFactor: " << norm.GetName() << endl;
+             // remove "doRatio" and name can be changed when ws gets imported to the combined model.
+             proto.factory(varname + range.str());
+          } else {
+             cxcoutI(HistFactory) << "exceptional making normFactor: " << norm.GetName() << endl;
+             RooRealVar *mu = new RooRealVar("mu", "mu", 1.0, -100.0, 100.0);
+             proto.import(*mu);
+          }
         }
 
         prodNames.push_back(varname);
@@ -473,9 +479,26 @@ RooArgList HistoToWorkspaceFactoryFast::createObservables(const TH1 *hist, RooWo
 
 
       for (const auto& name : prodNames) {
-        auto arg = proto.arg(name);
-        assert(arg);
-        normFactor->addTerm(arg);
+        if (name != "mu") {
+          auto arg = proto.arg(name);
+          assert(arg);
+          normFactor->addTerm(arg);
+        } else {
+            if (proto.obj("mu_MXs1_alt") == nullptr) {
+             cxcoutI(HistFactory) << "define mu_MXs1_alt" << endl;
+             RooRealVar *mu_var = proto.var("mu");
+             RooRealVar *mu_MXs2 = proto.var("mu_MXs2");
+             RooRealVar *mu_MXs3 = proto.var("mu_MXs3");
+             RooFormulaVar *mu1 = new RooFormulaVar(
+                "mu_MXs1_alt",
+                "(@2*(0.0000048514+0.0000085024+0.0000156653)-@0*0.0000085024-@1*0.0000156653)/0.0000048514",
+                RooArgList(*mu_MXs2, *mu_MXs3, *mu_var));
+             proto.import(*mu1);
+          }
+          auto arg = proto.arg("mu_MXs1_alt");
+          assert(arg);
+          normFactor->addTerm(arg);
+        }
       }
 
     }
