@@ -42,6 +42,7 @@
 #include "RooBinning.h"
 #include "RooBinWidthFunction.h"
 #include "RooFit/ModelConfig.h"
+#include "RooFormulaVar.h"
 
 #include "RooStats/RooStatsUtils.h"
 #include "RooStats/HistFactory/PiecewiseInterpolation.h"
@@ -461,14 +462,16 @@ RooArgList HistoToWorkspaceFactoryFast::createObservables(const TH1 *hist, RooWo
         range << "[" << norm.GetVal() << "," << norm.GetLow() << "," << norm.GetHigh() << "]";
 
         if( proto.obj(varname) == nullptr) {
-          if (name != "mu") {
+          if (varname != "mu_MXs1") {
              cxcoutI(HistFactory) << "making normFactor: " << norm.GetName() << endl;
              // remove "doRatio" and name can be changed when ws gets imported to the combined model.
              proto.factory(varname + range.str());
           } else {
              cxcoutI(HistFactory) << "exceptional making normFactor: " << norm.GetName() << endl;
-             RooRealVar *mu = new RooRealVar("mu", "mu", 1.0, -100.0, 100.0);
-             proto.import(mu);
+             if (proto.obj("mu") == nullptr) {
+                RooRealVar *mu = new RooRealVar("mu", "mu", 1.0, -100.0, 100.0);
+                proto.import(*mu);
+             }
           }
         }
 
@@ -479,23 +482,23 @@ RooArgList HistoToWorkspaceFactoryFast::createObservables(const TH1 *hist, RooWo
 
 
       for (const auto& name : prodNames) {
-        if (name != "mu") {
+        if (name != "mu_MXs1") {
           auto arg = proto.arg(name);
           assert(arg);
           normFactor->addTerm(arg);
         } else {
-            if (proto.obj("mu_MXs1_alt") == nullptr) {
-             cxcoutI(HistFactory) << "define mu_MXs1_alt" << endl;
+            if (proto.obj("mu_MXs1") == nullptr) {
+             cxcoutI(HistFactory) << "define mu_MXs1" << endl;
              RooRealVar *mu_var = proto.var("mu");
              RooRealVar *mu_MXs2 = proto.var("mu_MXs2");
              RooRealVar *mu_MXs3 = proto.var("mu_MXs3");
              RooFormulaVar *mu1 = new RooFormulaVar(
-                "mu_MXs1_alt",
+                "mu_MXs1",
                 "(@2*(0.0000048514+0.0000085024+0.0000156653)-@0*0.0000085024-@1*0.0000156653)/0.0000048514",
                 RooArgList(*mu_MXs2, *mu_MXs3, *mu_var));
-             proto.import(mu1);
+             proto.import(*mu1);
           }
-          auto arg = proto.arg("mu_MXs1_alt");
+          auto arg = proto.arg("mu_MXs1");
           assert(arg);
           normFactor->addTerm(arg);
         }
