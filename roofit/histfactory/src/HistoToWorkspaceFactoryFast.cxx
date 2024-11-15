@@ -502,7 +502,7 @@ RooArgList HistoToWorkspaceFactoryFast::createObservables(const TH1 *hist, RooWo
              RooRealVar *mu_MXs3 = proto.var("mu_MXs3");
              RooFormulaVar *mu1 = new RooFormulaVar(
                 "mu_MXs1",
-                "(@2*(0.0000048514+0.0000085024+0.0000156653)-@0*0.0000085024-@1*0.0000156653)/0.0000048514",
+                "@2*5.98159294224-@0*1.75256626953-@1*3.22902667271",
                 RooArgList(*mu_MXs2, *mu_MXs3, *mu_var));
              proto.import(*mu1);
           }
