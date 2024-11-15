@@ -116,7 +116,6 @@ int FrequentistCalculator::PreNullHook(RooArgSet *parameterPoint, double obsTest
       Int_t fPrintLevel = ROOT::Math::MinimizerOptions::DefaultPrintLevel() - 1;
 
       // follow what ProfileLikelihoodTestStat.cxx does
-      const auto &config = RooStats::GetGlobalRooStatsConfig();
       RooMinimizer minim(*nll);
       minim.setStrategy(fStrategy);
       minim.setEvalErrorWall(config.useEvalErrorWall);
@@ -256,7 +255,6 @@ int FrequentistCalculator::PreAltHook(RooArgSet *parameterPoint, double obsTestS
       Int_t fPrintLevel = ROOT::Math::MinimizerOptions::DefaultPrintLevel() - 1;
 
       // follow what ProfileLikelihoodTestStat.cxx does
-      const auto &config = RooStats::GetGlobalRooStatsConfig();
       RooMinimizer minim(*nll);
       minim.setStrategy(fStrategy);
       minim.setEvalErrorWall(config.useEvalErrorWall);
