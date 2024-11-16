@@ -190,6 +190,18 @@ double RooStats::ProfileLikelihoodTestStat::EvaluateProfileLikelihood(int type, 
           }
 
 
+          // I found that when we try to do fit with \mu = (\mu1*BR1+\mu2*BR2+\mu3*BR3)/BR, fit is unstable with large
+          // differecen among \mu1, \mu2, and \mu3. So proper initial value is assigned
+          if (TString(firstPOI->GetName()) == "mu") {
+             RooRealVar *mu_MXs2 = (RooRealVar *)allParams->find("mu_MXs2");
+             RooRealVar *mu_MXs3 = (RooRealVar *)allParams->find("mu_MXs3");
+             if ((mu_MXs2 != nullptr) && (mu_MXs3 != nullptr)) {
+                mu_MXs2->setVal(firstPOI->getVal());
+                mu_MXs3->setVal(firstPOI->getVal());
+             }
+          }
+
+
           // check if there are non-const parameters so it is worth to do the minimization
           RooArgSet allParams(*attachedSet);
           RooStats::RemoveConstantParameters(&allParams);
